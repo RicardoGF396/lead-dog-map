@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lead Dog Beer</title>
+    <!-- Mapa -->
+    <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+    <link
+      href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <!-- Estilos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link href="/index.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="/logo-ico.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <nav>
+      <img width="150px" src="/leaddog-logo.png" alt="logo" />
+    </nav>
+
+    <main>
+      <div class="container-form">
+        <form id="beer-form" action="/map" method="get" class="content-form">
+          <h3 class="title inter-font">Encuentra la sucursal más cercana</h3>
+          <p class="subtitle inter-font">
+            Completa el siguiente formulario y da clic en continuar para ver el
+            mapa
+          </p>
+          <div class="inputs-container">
+            <input type="text" name="nombre" placeholder="Ingresa tu nombre" />
+            <div class="two-columns">
+              <input
+                type="text"
+                name="latitud"
+                placeholder="Ingresa tu latitud"
+              />
+              <input
+                type="text"
+                name="longitud"
+                placeholder="Ingresa tu longitud"
+              />
+            </div>
+          </div>
+          <button class="inter-font" type="submit">Continuar</button>
+        </form>
+      </div>
+      <div class="map-container">
+        <div id="map"></div>
+      </div>
+    </main>
+    <script src="/index.js" type="module"></script>
+  </body>
+</html>

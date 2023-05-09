@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/logo-ico.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/map.css" />
+    <title>Mapa</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+
+    <!-- ========== AQUI SE RENDERIZA EL MAPA ============= -->
+    <div id="map"></div>
+
+    <!-- ====== LISTA DE SURCURSALES =========== -->
+      <div class="content-info">
+        <div class="logo">
+          <img width="150px" src="/leaddog-logo.png" />
+        </div>
+        <p class="subtitle">
+          Hola <span id="nombre-label">Ricardo </span>aquí se muestra una lista
+          de otras sucursal de Lead Dog
+        </p>
+        <!-- ========== AQUI SE RENDERIZA LA LISTA DE SUCUSALES ============= -->
+        <div class="cards-container">
+          <!-- ========== ESTE ES EL ELEMENTO QUE SE DEBE DE RENDERIZAR CUANDO SE HAGA EL MAPEO DE SUCURSALES ============= -->
+          <div class="card">
+            <h4 id="sucursal">Lead Dog Beer Campestre,León</h4>
+            <p id="gerente" class="manager-label"><b>Manager: </b>Ricardo González</p>
+            <p id="latitud">Latitude: <span>21.1234883</span></p>
+            <p id="longitud">Longitud: <span>-101.6834474,16.33z</span></p>
+          </div>
+
+        </div>
+      </div>
+      <!-- ========== AQUI SE MUESTRA LA SUCURSAL MÁS CERCANA ============= -->
+      <div class="near-subsidiary">
+        <img class="img-bar" src="/bar.jpg" alt="imgBar" />
+        <div>
+          <p class="subtitle">Ruta más cercana</p>
+          <h4>Lead Dog Beer Campestre,León</h4>
+          <p class="manager-label"><b>Manager: </b>Ricardo González</p>
+          <p>Latitude: <span>21.1234883</span></p>
+          <p>Longitud: <span>-101.6834474,16.33z</span></p>
+        </div>
+      </div>
+
+    <script src=" https://maps.googleapis.com/maps/api/js?key=AIzaSyDFanujpwtMpdwzOXmQ-3ygJrx6aXJs0Ss"></script>
+    <script src="/map.js" type="module"></script>
+  </body>
+</html>
