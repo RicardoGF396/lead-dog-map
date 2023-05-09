@@ -7,7 +7,7 @@ const longitud = urlParams.get("longitud");
 
 //Consumir de la API todas las sucursales y renderizarlas en el DOM
 
-//Hacer lógica para encontrar la sucursal más cercana y excluirla del arreglo que se va a mostrar en
+//Hacer lógica para encontrar la sucursal más cercana y excluirla del arregjlo que se va a mostrar en
 //la lista de sucursales
 
 //Renderizar en el mapa la ruta más cercana
