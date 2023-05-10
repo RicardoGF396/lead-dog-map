@@ -1,3 +1,5 @@
+//Se hace instancia de los servicios de google, tanto para consumiar la API
+// como para dibujar en el mapa las rutas
 const directionsService = new google.maps.DirectionsService();
 var directionsDisplay = new google.maps.DirectionsRenderer();
 
@@ -18,17 +20,17 @@ const longitud = parseFloat(urlParams.get("longitud"));
 //Consumir de la API todas las sucursales y renderizarlas en el DOM
 let mensajeNombre = document.getElementById("nombre-label");
 mensajeNombre.innerHTML = nombre;
-
+//Arreglo donde se guardaran las branches directamente de la API
 let branches = [{}];
 async function getBranches() {
   const response = await fetch("http://IP:4005/api/branches/all"); // AQUI SE CAMBIA POR TU IP
   const jsonData = await response.json();
   branches = jsonData.features;
 }
-await getBranches();
+await getBranches(); //Lo ejecutamos de forma asíncrona porque si nuna tomaría el valor
 
 var mylatlng = { lat: latitud, lng: longitud };
-//Cambiar despues por este arreglo
+//Cambiar despues por este arreglo, en donde vamos a ordenar todo
 let branchesSort = [{}];
 
 //Funcion para empezar a calcular el tiempo
@@ -61,10 +63,11 @@ function calcRoute() {
 
     promises.push(promise);
   }
-
+  //Devuelve una promesa con los objetos ya fusionados (nuestra API y Google Maps)
   return Promise.all(promises);
 }
 
+//Ya que se haya llenado el arreglo, vamos a ordenarlos
 calcRoute().then((branchesSort) => {
   branchesSort.sort(
     (a, b) => a.result.duration.value - b.result.duration.value
@@ -72,6 +75,7 @@ calcRoute().then((branchesSort) => {
 
   console.log(branchesSort);
 
+  //Aquí imprime la lista de todos los branches
   const cards = branchesSort
     .map((branch) => {
       return `
@@ -87,6 +91,7 @@ calcRoute().then((branchesSort) => {
     })
     .join(" ");
 
+    //Obtenemos la ruta más cerca y la mostramos en la tarjea de abajo en la derecha
   const card = `
 <img class="img-bar" src="/bar.jpg" alt="imgBar" />
 <div>
@@ -98,7 +103,7 @@ calcRoute().then((branchesSort) => {
     <p id="longitud">Tiempo: <span>${branchesSort[0].result.duration.text}</span></p>
   </div
 `;
-
+    // Aquí se usa para rendizar la ruta más cercana
   directionsService.route(
     {
       origin: mylatlng,
