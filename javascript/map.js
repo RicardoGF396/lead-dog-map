@@ -19,7 +19,7 @@ const longitud = urlParams.get("longitud");
 
 let branches = [{}];
 async function getBranches() {
-  const response = await fetch("http://172.18.70.82:4005/api/branches/all");
+  const response = await fetch("http://ip:4005/api/branches/all");
   const jsonData = await response.json();
   branches = jsonData.features;
 }
@@ -31,58 +31,74 @@ var mylatlng = { lat: 21.15153969516301, lng: -101.71164537558829 };
 let branchesSort = [{}];
 
 //Funcion para empezar a calcular el tiempo
+//Funcion para empezar a calcular el tiempo
 function calcRoute() {
+  const promises = [];
+
   for (let i = 0; i < branches.length; i++) {
-    var request = {
+    const request = {
       origin: mylatlng,
-      destination: `${
-        branches[i].geometry.coordinates[1] +
-        "," +
-        branches[i].geometry.coordinates[0]
-      }`,
+      destination: `${branches[i].geometry.coordinates[1]},${branches[i].geometry.coordinates[0]}`,
       travelMode: google.maps.TravelMode.DRIVING, //WALKING, BYCYCLING AND TRANSIT
       unitSystem: google.maps.UnitSystem.IMPRERIAL,
     };
 
-    directionsService.route(request, (result, status) => {
-      if (status == google.maps.DirectionsStatus.OK) {
-        //get distance and time
-        branchesSort.push({
-          branches: branches[i],
-          result: {
-            distance: result.routes[0].legs[0].distance,
-            duration: result.routes[0].legs[0].duration,
-          },
-        });
-      } else {
-        map.setCenter(mylatlng);
-      }
+    const promise = new Promise((resolve, reject) => {
+      directionsService.route(request, (result, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          resolve({
+            branches: branches[i],
+            result: {
+              distance: result.routes[0].legs[0].distance,
+              duration: result.routes[0].legs[0].duration,
+            },
+          });
+        } else {
+          reject(new Error(`Directions request failed: ${status}`));
+        }
+      });
     });
+
+    promises.push(promise);
   }
 
-  //directionsDisplay.setDirections(branchesSort[0]);
-  //directionsDisplay.setDirections(branchesSort[0]);
+  return Promise.all(promises);
 }
 
-calcRoute();
+calcRoute().then((branchesSort) => {
+  branchesSort.sort(
+    (a, b) => a.result.duration.value - b.result.duration.value
+  );
 
-branchesSort.sort((a, b) => a.result.duration.value - b.result.duration.value);
+  console.log(branchesSort);
 
-console.log(branchesSort);
+  const cards = branchesSort
+    .map((branch) => {
+      return `
+        <div class="card">
+          <h4 id="sucursal"> ${branch.branches.properties.name}</h4>
+          <p id="gerente" class="manager-label"><b>Manager: </b>${
+            branch.branches.properties.manager_name
+          }</p>
+          <p id="latitud">Latitude: <span>${
+            branch.branches.geometry.coordinates[0]
+          }</span></p>
+          <p id="longitud">Longitud: <span>${
+            branch.branches.geometry.coordinates[1]
+          }</span></p>
+          <p id="longitud">Distancia: <span>${
+            branch.result.distance.text
+          }</span></p>
+          <p id="longitud">Tiempo: <span>${
+            branch.result.duration.text
+          }</span></p>
+        </div>
+      `;
+    })
+    .join(" ");
 
-const cards = branches
-  .map((branch) => {
-    return `
-    <div class="card">
-    <h4 id="sucursal"> ${branch.properties.name}</h4>
-    <p id="gerente" class="manager-label"><b>Manager: </b>${branch.properties.manager_name}</p>
-    <p id="latitud">Latitude: <span>${branch.geometry.coordinates[0]}</span></p>
-    <p id="longitud">Longitud: <span></span>${branch.geometry.coordinates[1]}</p>
-  </div>
-`;
-  })
-  .join(" ");
-document.getElementById("id-component").innerHTML = cards;
+  document.getElementById("id-component").innerHTML = cards;
+});
 //Hacer lógica para encontrar la sucursal más cercana y excluirla del arregjlo que se va a mostrar en
 //la lista de sucursales
 
