@@ -12,21 +12,24 @@ const map = new google.maps.Map(document.getElementById("map"), {
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const nombre = urlParams.get("nombre");
-const latitud = urlParams.get("latitud");
-const longitud = urlParams.get("longitud");
+const latitud = parseFloat(urlParams.get("latitud"));
+const longitud = parseFloat(urlParams.get("longitud"));
 
 //Consumir de la API todas las sucursales y renderizarlas en el DOM
 
+let mensajeNombre = document.getElementById('nombre-label')
+mensajeNombre.innerHTML = nombre
+
 let branches = [{}];
 async function getBranches() {
-  const response = await fetch("http://ip:4005/api/branches/all");
+  const response = await fetch("http://IP:4005/api/branches/all"); // AQUI SE CAMBIA POR TU IP
   const jsonData = await response.json();
   branches = jsonData.features;
 }
 await getBranches();
 
 //console.log(branches);
-var mylatlng = { lat: 21.15153969516301, lng: -101.71164537558829 };
+var mylatlng = { lat: latitud, lng:longitud };
 //Cambiar despues por este arreglo
 let branchesSort = [{}];
 
@@ -65,6 +68,7 @@ function calcRoute() {
   return Promise.all(promises);
 }
 
+
 calcRoute().then((branchesSort) => {
   branchesSort.sort(
     (a, b) => a.result.duration.value - b.result.duration.value
@@ -97,18 +101,35 @@ calcRoute().then((branchesSort) => {
     })
     .join(" ");
 
-  document.getElementById("id-component").innerHTML = cards;
-});
-//Hacer lógica para encontrar la sucursal más cercana y excluirla del arregjlo que se va a mostrar en
-//la lista de sucursales
+const card = `
+<img class="img-bar" src="/bar.jpg" alt="imgBar" />
+<div>
+    <p class="subtitle">Ruta más cercana</p>
+    <h4>${branchesSort[0].branches.properties.name}</h4>
+    <p class="manager-label"><b>Manager: </b>${
+      branchesSort[0].branches.properties.manager_name
+    }</p>
+    <p>Latitude: <span>${
+      branchesSort[0].branches.geometry.coordinates[0]
+    }</span></p>
+    <p>Longitud: <span>${
+      branchesSort[0].branches.geometry.coordinates[1]
+    }</span></p><p id="longitud">Distancia: <span>${
+      branchesSort[0].result.distance.text
+    }</span></p>
+    <p id="longitud">Tiempo: <span>${
+      branchesSort[0].result.duration.text
+    }</span></p>
+  </div
+`
 
 directionsService.route(
   {
-    origin: "21.15156966306249, -101.71159175332481",
+    origin: mylatlng,
     destination: `${
-      branches[0].geometry.coordinates[1] +
+      branchesSort[0].branches.geometry.coordinates[1] +
       "," +
-      branches[0].geometry.coordinates[0]
+      branchesSort[0].branches.geometry.coordinates[0]
     }`,
     travelMode: "DRIVING",
   },
@@ -121,4 +142,20 @@ directionsService.route(
       });
     }
   }
+
+  
 );
+
+   console.log( branchesSort[0].branches.properties.name)
+
+  document.getElementById("id-component").innerHTML = cards;
+  document.getElementById("sucursal_card").innerHTML = card;
+});
+//Hacer lógica para encontrar la sucursal más cercana y excluirla del arregjlo que se va a mostrar en
+//la lista de sucursales
+
+
+
+
+
+

@@ -10,7 +10,7 @@ map.on('load', ()=>{
     map.addSource('Starts_points',{
     type:'geojson',
     //data:'http://172.18.70.103:4001/api/users/allgeousers'
-    data:'http://172.18.70.103:4005/api/branches/all' // AQUI SE CAMBIA POR TU IP
+    data:'http://IP:4005/api/branches/all' // AQUI SE CAMBIA POR TU IP
     });
     map.addLayer({
         'id':'Stars',
