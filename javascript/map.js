@@ -26,7 +26,7 @@ async function getBranches() {
 await getBranches();
 
 //console.log(branches);
-var mylatlng = { lat: 21.15153969516301, lng: -101.71164537558829 };
+var mylatlng = { lat:latitud, lng:longitud };
 //Cambiar despues por este arreglo
 let branchesSort = [{}];
 
@@ -104,7 +104,7 @@ calcRoute().then((branchesSort) => {
 
 directionsService.route(
   {
-    origin: "21.15156966306249, -101.71159175332481",
+    origin: mylatlng,
     destination: `${
       branches[0].geometry.coordinates[1] +
       "," +
